@@ -344,3 +344,18 @@ h2{
 }
 .modal-overlay[hidden] { display: none !important; }
 
+
+html, body {
+  height: 100%;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+html {
+  background: #0b1020;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
