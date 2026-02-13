@@ -1,488 +1,107 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Учёба</title>
-  <style>
-    :root{
-      --bg: #0b0f17;
-      --card: #111a2c;
-      --text: #e8eefc;
-      --muted: #a2b1d6;
-      --border: #22304c;
-      --btn: #0f1627;
-      --btn2: #16223a;
-      --shadow: 0 10px 30px rgba(0,0,0,.25);
-      --radius: 14px;
-    }
-    [data-theme="light"]{
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #0b1220;
-      --muted: #51607e;
-      --border: #d7deee;
-      --btn: #f2f5ff;
-      --btn2: #e8eefc;
-      --shadow: 0 10px 30px rgba(15,20,35,.10);
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="Учебный портал с расписанием и предметами" />
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .wrap{ max-width:1100px; margin:0 auto; padding:0 16px; }
-    header{
-      position: sticky; top:0;
-      background: color-mix(in srgb, var(--bg) 90%, transparent);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid var(--border);
-      z-index: 5;
-    }
-    .top{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0; gap:10px; flex-wrap:wrap;
-    }
-    h1{ margin:0; font-size:16px; letter-spacing:.2px; }
-    .meta{ font-size:12px; color:var(--muted); margin-top:4px; }
+  <title>Учебный портал</title>
 
-    .right{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .pill{
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      font-size:12px;
-      color: var(--muted);
-      background: color-mix(in srgb, var(--card) 70%, transparent);
-    }
-    .toggle{
-      border:1px solid var(--border);
-      background: var(--btn);
-      color: var(--text);
-      border-radius:999px;
-      padding:8px 10px;
-      cursor:pointer;
-      font-weight:700;
-      font-size:12px;
-    }
-    main{ padding:16px 0 44px; }
-    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:12px; }
-    .card{
-      grid-column: span 12;
-      background: var(--card);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .cardHead{
-      padding:12px 12px 10px;
-      border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
-    }
-    .cardHead h2{ margin:0; font-size:13px; letter-spacing:.2px; }
-    .cardBody{ padding:12px; }
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    @media (min-width: 900px){
-      .span6{ grid-column: span 6; }
-      .span4{ grid-column: span 4; }
-      .span8{ grid-column: span 8; }
-    }
+  <!-- Non-blocking Google Fonts -->
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  </noscript>
 
-    .list{ display:grid; gap:10px; }
-    .row{
-      border:1px solid var(--border);
-      border-radius: 12px;
-      padding:12px;
-      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
-      background: color-mix(in srgb, var(--card) 85%, transparent);
-    }
-    .title{ font-weight:800; font-size:13px; }
-    .subtxt{ font-size:12px; color:var(--muted); margin-top:4px; line-height:1.35; }
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 
-    .btnRow{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-    .btn{
-      border:1px solid var(--border);
-      background: var(--btn);
-      color: var(--text);
-      border-radius: 12px;
-      padding:9px 10px;
-      cursor:pointer;
-      font-weight:800;
-      font-size:12px;
-    }
-    .btn:hover{ background: var(--btn2); }
-
-    .mono{
-      white-space:pre-wrap;
-      line-height:1.35;
-      font-size:12px;
-      color: color-mix(in srgb, var(--text) 90%, transparent);
-    }
-
-    /* modal */
-    .backdrop{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      display:none;
-      align-items:center; justify-content:center;
-      padding:16px;
-      z-index: 20;
-    }
-    [data-theme="light"] .backdrop{ background: rgba(10,14,28,.35); }
-    .modal{
-      width:min(860px,100%);
-      background: var(--card);
-      border:1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .mHead{
-      padding:12px;
-      border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
-    }
-    .mHead h3{ margin:0; font-size:13px; }
-    .mBody{ padding:12px; }
-    .close{
-      border:1px solid var(--border);
-      background: var(--btn);
-      color: var(--text);
-      border-radius: 12px;
-      padding:8px 10px;
-      cursor:pointer;
-      font-weight:900;
-      font-size:12px;
-    }
-
-    table{ width:100%; border-collapse:collapse; font-size:12px; }
-    th, td{ border-bottom:1px solid var(--border); padding:8px 6px; text-align:left; }
-    th{ color: var(--muted); font-weight:800; }
-  </style>
+  <!-- App (defer = не блокирует загрузку страницы) -->
+  <script defer src="app.js"></script>
 </head>
 
-<body data-theme="dark">
-<header>
-  <div class="wrap top">
-    <div>
-      <h1>Учёба</h1>
-      <div class="meta" id="metaLine">Загрузка…</div>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="title">Учебный портал</div>
+      <div class="subtitle">Данные из Google Sheets • только просмотр</div>
     </div>
+	<nav class="nav">
+  		<a class="nav-link" href="https://golnk.ru/MBWQv" target="_blank" rel="noopener">Очередь</a>
+  		<a class="nav-link" href="https://lks.rusoil.net/profile/disciplines"_blank" rel="noopener">Веб версия УГНТУ</a>
+  		<a class="nav-link" href="https://drive.google.com/drive/folders/1vNkU6S7uZybUaS80bR5jArtNvgvoFZlt"_blank" rel="noopener">Записи практик</a>
+	</nav>
     <div class="right">
-      <div class="pill" id="clock">--:--</div>
-      <button class="toggle" id="themeBtn">Светлая тема</button>
+      <div class="clock">
+        <div id="time" class="time">--:--:--</div>
+        <div id="date" class="date">----</div>
+      </div>
+      <button id="themeToggle" class="btn btn-ghost" title="Тема">🌙/☀️</button>
     </div>
-  </div>
-</header>
+  </header>
 
-<main class="wrap">
-  <div class="grid">
-    <section class="card span6">
-      <div class="cardHead">
-        <h2>Информация от старосты</h2>
+  <main class="container">
+    <section class="card">
+      <div class="card-head">
+        <h2>Актуальная информация</h2>
+        <div id="infoUpdated" class="muted"></div>
       </div>
-      <div class="cardBody">
-        <div class="list" id="annList"></div>
-      </div>
+      <div id="infoMessage" class="info-message">Загрузка…</div>
     </section>
 
-    <section class="card span6">
-      <div class="cardHead">
-        <h2>Требования к автомату</h2>
-        <button class="btn" id="openGlobalReq">Открыть</button>
-      </div>
-      <div class="cardBody">
-        <div class="subtxt">Кнопки “Требования” в предметах могут показывать конкретный предмет, если задано в таблице.</div>
-      </div>
+    <section class="grid">
+      <section class="card">
+        <div class="card-head">
+          <h2>Предметы</h2>
+          <div class="muted">Кнопки ведут на ссылки из таблицы</div>
+        </div>
+        <div id="subjects" class="list"><div class="skeleton">Загрузка…</div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Расписание</h2>
+          <div class="muted">Сгруппировано по дням</div>
+        </div>
+        <div id="schedule" class="schedule"><div class="skeleton">Загрузка…</div></div>
+      </section>
     </section>
 
-    <section class="card span12">
-      <div class="cardHead">
-        <h2>Предметы</h2>
-      </div>
-      <div class="cardBody">
-        <div class="list" id="subjectsList"></div>
-      </div>
-    </section>
-
-    <section class="card span12">
-      <div class="cardHead">
-        <h2>Расписание</h2>
-      </div>
-      <div class="cardBody">
-        <div id="scheduleBox" class="mono muted">Загрузка…</div>
-      </div>
-    </section>
-  </div>
-</main>
-
-<div class="backdrop" id="backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="mHead">
+    <footer class="muted footer">
+      Если ты меняешь таблицу — изменения появятся у всех при обновлении страницы (и быстро благодаря кэшу).
+    </footer>
+  </main>
+  <div id="modalOverlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
       <div>
-        <h3 id="mTitle">Окно</h3>
-        <div class="meta" id="mSub"></div>
+        <div id="modalTitle" class="modal-title">Заголовок</div>
+        <div id="modalSubtitle" class="modal-subtitle muted"></div>
       </div>
-      <button class="close" id="mClose">Закрыть</button>
+      <button id="modalClose" class="btn btn-ghost" aria-label="Закрыть">✕</button>
     </div>
-    <div class="mBody" id="mBody"></div>
+
+    <div id="modalBody" class="modal-body"></div>
+
+    <div class="modal-actions">
+      <a id="modalOpenLink" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">Открыть</a>
+      <button id="modalCopy" class="btn" type="button">Скопировать ссылку</button>
+      <button id="modalCancel" class="btn" type="button">Закрыть</button>
+    </div>
   </div>
 </div>
 
-<script>
-  // Вставь URL /exec твоего Apps Script Web App:
-  const SHEETS_API_URL = https://script.google.com/macros/s/AKfycbw096q4_keSu8JHESWost-d547EvQiQRMj2I2YE0dQPm17yfseBv3Bxf6SnSqcUFCPbPg/exec
 
-  const el = (id) => document.getElementById(id);
-
-  function fmtDate(v){
-    if (!v) return "";
-    const d = new Date(v);
-    if (isNaN(d.getTime())) return String(v);
-    return d.toLocaleString("ru-RU", { year:"numeric", month:"2-digit", day:"2-digit" });
-  }
-  function fmtDateTime(v){
-    if (!v) return "";
-    const d = new Date(v);
-    if (isNaN(d.getTime())) return String(v);
-    return d.toLocaleString("ru-RU", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" });
-  }
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
-
-  // Theme
-  const THEME_KEY = "study_theme_v1";
-  function setTheme(t){
-    document.body.setAttribute("data-theme", t);
-    localStorage.setItem(THEME_KEY, t);
-    el("themeBtn").textContent = (t === "dark") ? "Светлая тема" : "Тёмная тема";
-  }
-  el("themeBtn").addEventListener("click", ()=>{
-    const cur = document.body.getAttribute("data-theme") || "dark";
-    setTheme(cur === "dark" ? "light" : "dark");
-  });
-  setTheme(localStorage.getItem(THEME_KEY) || "dark");
-
-  // Clock
-  function tick(){
-    const d = new Date();
-    el("clock").textContent = d.toLocaleTimeString("ru-RU", { hour:"2-digit", minute:"2-digit" });
-  }
-  tick(); setInterval(tick, 1000);
-
-  // Modal
-  function openModal(title, sub, bodyHtml){
-    el("mTitle").textContent = title;
-    el("mSub").textContent = sub || "";
-    el("mBody").innerHTML = bodyHtml || "";
-    el("backdrop").style.display = "flex";
-    el("backdrop").setAttribute("aria-hidden","false");
-  }
-  function closeModal(){
-    el("backdrop").style.display = "none";
-    el("backdrop").setAttribute("aria-hidden","true");
-  }
-  el("mClose").addEventListener("click", closeModal);
-  el("backdrop").addEventListener("click", (e)=>{ if(e.target === el("backdrop")) closeModal(); });
-  window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
-
-  async function loadData(){
-    if (!SHEETS_API_URL || SHEETS_API_URL.includes("PASTE_")) {
-      el("metaLine").innerHTML = "Вставь SHEETS_API_URL в index.html";
-      return null;
-    }
-    const res = await fetch(SHEETS_API_URL, { cache:"no-store" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    return await res.json();
-  }
-
-  function pickAutoReqForSubject(reqs, subject){
-    // subject-specific first, then ALL
-    const s = String(subject || "").trim();
-    const bySubject = reqs.find(r => String(r.subject||"").trim() === s);
-    if (bySubject) return bySubject;
-    return reqs.find(r => String(r.subject||"").trim().toUpperCase() === "ALL") || null;
-  }
-
-  function renderAnnouncements(items){
-    const list = el("annList");
-    list.innerHTML = "";
-
-    const arr = Array.isArray(items) ? items.slice() : [];
-    // sort: pin desc, date desc
-    arr.sort((a,b)=>{
-      const ap = String(a.pin).toLowerCase()==="true" ? 1 : 0;
-      const bp = String(b.pin).toLowerCase()==="true" ? 1 : 0;
-      if (ap !== bp) return bp - ap;
-      const ad = Date.parse(a.date) || 0;
-      const bd = Date.parse(b.date) || 0;
-      return bd - ad;
-    });
-
-    if (!arr.length){
-      list.innerHTML = `<div class="subtxt">Пока нет объявлений (лист announcements пуст).</div>`;
-      return;
-    }
-
-    arr.slice(0, 8).forEach(x=>{
-      const row = document.createElement("div");
-      row.className = "row";
-      row.innerHTML = `
-        <div>
-          <div class="title">${esc(x.title || "Объявление")}</div>
-          <div class="subtxt">${esc(x.date ? fmtDate(x.date) : "")}${String(x.pin).toLowerCase()==="true" ? " • закреплено" : ""}</div>
-          <div class="subtxt" style="margin-top:8px; white-space:pre-wrap;">${esc(x.text || "")}</div>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-
-  function renderSubjects(subjects, hw, reqs){
-    const list = el("subjectsList");
-    list.innerHTML = "";
-
-    const subs = Array.isArray(subjects) ? subjects.slice() : [];
-    subs.sort((a,b)=> (Number(a.order)||999) - (Number(b.order)||999));
-
-    // group homework by subject
-    const hwMap = new Map();
-    (Array.isArray(hw) ? hw : []).forEach(x=>{
-      const s = String(x.subject||"").trim();
-      if (!s) return;
-      if (!hwMap.has(s)) hwMap.set(s, []);
-      hwMap.get(s).push(x);
-    });
-
-    if (!subs.length){
-      list.innerHTML = `<div class="subtxt">Лист subjects пуст — добавь предметы в таблицу.</div>`;
-      return;
-    }
-
-    subs.forEach(s=>{
-      const subjectName = String(s.subject || "").trim();
-      const teacher = String(s.teacher || "").trim();
-      const groupUrl = String(s.group_url || "").trim();
-
-      const row = document.createElement("div");
-      row.className = "row";
-
-      const hwItems = hwMap.get(subjectName) || [];
-
-      row.innerHTML = `
-        <div>
-          <div class="title">${esc(subjectName || "Предмет")}</div>
-          <div class="subtxt">${esc(teacher ? ("Преподаватель: " + teacher) : "")}</div>
-        </div>
-        <div class="btnRow">
-          <button class="btn" data-act="hw">ДЗ</button>
-          <button class="btn" data-act="req">Требования</button>
-          ${groupUrl ? `<a class="btn" href="${esc(groupUrl)}" target="_blank" rel="noopener">Группа</a>` : ``}
-        </div>
-      `;
-
-      const hwBtn = row.querySelector('[data-act="hw"]');
-      const reqBtn = row.querySelector('[data-act="req"]');
-
-      hwBtn.addEventListener("click", ()=>{
-        if (!hwItems.length){
-          openModal(`ДЗ — ${subjectName}`, "", `<div class="mono">Нет записей в листе homework для этого предмета.</div>`);
-          return;
-        }
-        // покажем все записи
-        const itemsHtml = hwItems.map(x=>{
-          const head = `${esc(x.title || "ДЗ")}${x.due ? " • до " + esc(x.due) : ""}${x.updated ? " • upd " + esc(x.updated) : ""}`;
-          return `<li><b>${head}</b><div class="subtxt" style="margin-top:6px; white-space:pre-wrap;">${esc(x.text||"")}</div></li>`;
-        }).join("");
-        openModal(`ДЗ — ${subjectName}`, "", `<div class="mono"><ol>${itemsHtml}</ol></div>`);
-      });
-
-      reqBtn.addEventListener("click", ()=>{
-        const r = pickAutoReqForSubject(reqs, subjectName);
-        if (!r){
-          openModal(`Требования — ${subjectName}`, "", `<div class="mono">Нет записей в auto_requirements.</div>`);
-          return;
-        }
-        const sub = r.updated ? `Обновлено: ${fmtDateTime(r.updated)}` : "";
-        openModal(`Требования — ${subjectName}`, sub, `<div class="mono">${esc((r.title ? r.title + "\n\n" : "") + (r.text || ""))}</div>`);
-      });
-
-      list.appendChild(row);
-    });
-  }
-
-  function renderSchedule(items){
-    const box = el("scheduleBox");
-    const arr = Array.isArray(items) ? items.slice() : [];
-    if (!arr.length){
-      box.textContent = "Лист schedule пуст.";
-      return;
-    }
-
-    const orderDay = { "Пн":1,"Вт":2,"Ср":3,"Чт":4,"Пт":5,"Сб":6,"Вс":7 };
-    arr.sort((a,b)=>{
-      const da = orderDay[String(a.day||"").trim()] || 99;
-      const db = orderDay[String(b.day||"").trim()] || 99;
-      if (da !== db) return da - db;
-      return String(a.time||"").localeCompare(String(b.time||""), "ru");
-    });
-
-    const rows = arr.map(x=>`
-      <tr>
-        <td>${esc(x.day||"")}</td>
-        <td>${esc(x.time||"")}</td>
-        <td>${esc(x.subject||"")}</td>
-        <td>${esc(x.room||"")}</td>
-        <td>${esc(x.type||"")}</td>
-        <td>${esc(x.teacher||"")}</td>
-      </tr>
-    `).join("");
-
-    box.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>День</th><th>Время</th><th>Предмет</th><th>Ауд.</th><th>Тип</th><th>Препод</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `;
-  }
-
-  (async ()=>{
-    try{
-      const data = await loadData();
-      el("metaLine").textContent = data?.meta?.generatedAt ? ("Обновлено: " + fmtDateTime(data.meta.generatedAt)) : "Готово";
-
-      const hw = data.homework || [];
-      const reqs = data.auto_requirements || [];
-      const ann = data.announcements || [];
-      const sched = data.schedule || [];
-      const subjects = data.subjects || [];
-
-      renderAnnouncements(ann);
-      renderSubjects(subjects, hw, reqs);
-      renderSchedule(sched);
-
-      el("openGlobalReq").addEventListener("click", ()=>{
-        const r = pickAutoReqForSubject(reqs, "ALL") || reqs[0];
-        if (!r) return openModal("Требования к автомату", "", `<div class="mono">Нет записей в auto_requirements.</div>`);
-        const sub = r.updated ? `Обновлено: ${fmtDateTime(r.updated)}` : "";
-        openModal(r.title || "Требования к автомату", sub, `<div class="mono">${esc(r.text || "")}</div>`);
-      });
-
-    }catch(e){
-      el("metaLine").textContent = "Ошибка загрузки: " + (e.message || String(e));
-    }
-  })();
-</script>
 </body>
 </html>
