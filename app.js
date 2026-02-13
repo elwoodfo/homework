@@ -221,7 +221,7 @@ hwBtn.addEventListener("click", () => {
 });
 
 actions.appendChild(hwBtn);
-    actions.appendChild(linkBtn("Требования к автомату", r.auto_url, name));
+    actions.appendChild(linkBtn("Для автомата", r.auto_url, name));
     actions.appendChild(linkBtn("Вступить в группу", r.group_url, name));
 
     row.appendChild(left);
