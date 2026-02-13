@@ -359,3 +359,15 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.today-highlight {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 4px;
+}
+
+.today-highlight{
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+  padding-bottom: 4px;
+}

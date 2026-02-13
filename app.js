@@ -19,6 +19,8 @@ function initTheme() {
   });
 }
 
+
+
 // ==============================
 // CLOCK
 // ==============================
@@ -44,6 +46,7 @@ function startClock() {
 // ==============================
 // UTIL
 // ==============================
+
 function escapeHtml(s) {
   return String(s ?? "")
     .replaceAll("&", "&amp;")
@@ -51,6 +54,26 @@ function escapeHtml(s) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function getTodayShortRu() {
+  const full = new Date().toLocaleDateString("ru-RU", { weekday: "long" }).toLowerCase();
+  const map = {
+    "понедельник": "пн",
+    "вторник": "вт",
+    "среда": "ср",
+    "четверг": "чт",
+    "пятница": "пт",
+    "суббота": "сб",
+    "воскресенье": "вс",
+  };
+  return map[full] || full.slice(0, 2);
+}
+
+function getTodayRu() {
+  return new Date().toLocaleDateString("ru-RU", {
+    weekday: "long"
+  }).toLowerCase();
 }
 
 function formatDateShort(v) {
@@ -237,6 +260,25 @@ function renderInfo(rows) {
   document.getElementById("infoMessage").textContent = map.message || "Нет актуальной информации.";
 }
 
+function formatTimeOnly(value) {
+  const s = String(value ?? "").trim();
+  if (!s) return "--";
+
+  // если это ISO дата-время
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+  }
+
+  // если там уже строка типа "10:30" или "10:30-12:00"
+  return s;
+}
+
 function renderSchedule(rows) {
   const root = document.getElementById("schedule");
   root.innerHTML = "";
@@ -259,12 +301,20 @@ function renderSchedule(rows) {
     dayBox.className = "day";
 
     const title = document.createElement("div");
-    title.className = "day-title";
-    title.textContent = day;
-    dayBox.appendChild(title);
+title.className = "day-title";
+title.textContent = day;
+
+const todayShort = getTodayShortRu();
+
+if (String(day).trim().toLowerCase() === todayShort) {
+  title.classList.add("today-highlight");
+}
+
+dayBox.appendChild(title);
+
 
     lessons.forEach((l) => {
-      const leftVal = formatDateShort(l.time);
+      const leftVal = formatTimeOnly(l.time);
       const subj = String(l.subject || "").trim() || "—";
       const room = String(l.room || "").trim();
       const note = String(l.note || "").trim();
